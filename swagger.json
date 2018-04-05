@@ -134,6 +134,37 @@
         }
       }
     },
+    "/marketplace/merchants/v1/{marketplaceCode}/incoming/{merchantCode}": {
+      "get": {
+        "tags": [
+          "Marketplace - Merchants API - Merchants"
+        ],
+        "summary": "Get the incoming merchant",
+        "operationId": "GetIncomingMerchantIndex",
+        "parameters": [
+          {
+            "$ref": "#/parameters/marketplaceCodeParameter"
+          },
+          {
+            "$ref": "#/parameters/merchantCodeParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The incoming merchant index",
+            "schema": {
+              "$ref": "#/definitions/incomingMerchantIndex"
+            }
+          },
+          "404": {
+            "$ref": "#/responses/merchantOrMarketplaceNotFound"
+          },
+          "default": {
+            "$ref": "#/responses/GeneralError"
+          }
+        }
+      }
+    },
     "/marketplace/merchants/v1/{marketplaceCode}/outgoing": {
       "post": {
         "tags": [
@@ -164,7 +195,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/incomingMerchantList"
+              "$ref": "#/definitions/outgoingMerchantList"
             }
           },
           "404": {
@@ -176,13 +207,13 @@
         }
       }
     },
-    "/marketplace/merchants/v1/{marketplaceCode}/{merchantCode}": {
+    "/marketplace/merchants/v1/{marketplaceCode}/outgoing/{merchantCode}": {
       "get": {
         "tags": [
           "Marketplace - Merchants API - Merchants"
         ],
-        "summary": "Get the list of merchants related to a marketplace",
-        "operationId": "GetMerchantIndex",
+        "summary": "Get the outgoing merchant",
+        "operationId": "GetOutgoingMerchantIndex",
         "parameters": [
           {
             "$ref": "#/parameters/marketplaceCodeParameter"
@@ -193,9 +224,9 @@
         ],
         "responses": {
           "200": {
-            "description": "The merchant index",
+            "description": "The outgoing merchant index",
             "schema": {
-              "$ref": "#/definitions/merchantIndex"
+              "$ref": "#/definitions/outgoingMerchantIndex"
             }
           },
           "404": {
@@ -405,7 +436,7 @@
             "name": "marketplaceMerchantCode",
             "in": "body",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/marketplaceMerchantCode"
             },
             "required": true
           }
@@ -428,21 +459,21 @@
     }
   },
   "definitions": {
-    "links.GetMerchantListLink": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/link3"
-        }
-      ]
-    },
     "marketplaceMerchantApiIndexLinks": {
       "type": "object",
       "required": [
-        "list"
+        "incoming",
+        "outgoing"
       ],
       "properties": {
-        "list": {
-          "$ref": "#/definitions/links.GetMerchantListLink"
+        "self": {
+          "$ref": "#/definitions/links.GetMarketplaceMerchantApiIndexLink"
+        },
+        "incoming": {
+          "$ref": "#/definitions/links.GetIncomingMerchantListLink"
+        },
+        "outgoing": {
+          "$ref": "#/definitions/links.GetOutgoingMerchantListLink"
         }
       }
     },
@@ -476,6 +507,64 @@
       "properties": {
         "orderBy": {
           "$ref": "#/definitions/merchantListOrderBy"
+        },
+        "searchCompanyName": {
+          "type": "string",
+          "description": "Search merchants by company name",
+          "example": "Literie"
+        },
+        "searchMerchantCode": {
+          "type": "string",
+          "description": "Search merchants by the code",
+          "example": "MLT"
+        },
+        "searchMarketplaceMerchantCode": {
+          "type": "string",
+          "description": "Search merchants bymarketplace MerchantCode",
+          "example": 50041
+        },
+        "searchContactEmail": {
+          "type": "string",
+          "description": "Search merchants by contact Email",
+          "example": "contact@ma-boutique-en-ligne.com"
+        },
+        "searchContactName": {
+          "type": "string",
+          "description": "Search merchants by the contact name",
+          "example": "Johnson"
+        },
+        "searchContactPhone": {
+          "type": "string",
+          "description": "Search merchants by the ContactPhone",
+          "example": "+33711223344"
+        },
+        "filterSubscriptionRequestUtcDateFrom": {
+          "type": "string",
+          "format": "date-time",
+          "description": "filter merchants From beginning subscription request date"
+        },
+        "filterSubscriptionRequestUtcDateTo": {
+          "type": "string",
+          "format": "date-time",
+          "description": "filter merchants by subscription request date"
+        },
+        "filterCountry": {
+          "type": "string",
+          "description": "filter merchants by country code",
+          "example": "FRA"
+        },
+        "filterSourceMarketplaceCode": {
+          "type": "string",
+          "description": "filter merchants by Source MarketplaceCode",
+          "example": "C1"
+        },
+        "filterSubscriptionStatusId": {
+          "type": "integer",
+          "description": "filter merchants by SubscriptionStatus"
+        },
+        "filterofferPublicationStatusId": {
+          "type": "integer",
+          "description": "filter merchants by offer publication status"
         }
       }
     },
@@ -494,17 +583,49 @@
           "type": "string",
           "description": "Search merchants by the code",
           "example": "MLT"
-        }
-      }
-    },
-    "merchantListLinks": {
-      "type": "object",
-      "required": [
-        "self"
-      ],
-      "properties": {
-        "self": {
-          "$ref": "#/definitions/links.GetMerchantListLink"
+        },
+        "searchMarketplaceMerchantCode": {
+          "type": "string",
+          "description": "Search merchants by the marketplaceMerchantCode",
+          "example": 50041
+        },
+        "searchContactEmail": {
+          "type": "string",
+          "description": "Search merchants by the contactEmail",
+          "example": "contact@ma-boutique-en-ligne.com"
+        },
+        "searchContactName": {
+          "type": "string",
+          "description": "Search merchants by the contact name",
+          "example": "Johnson"
+        },
+        "searchContactPhone": {
+          "type": "string",
+          "description": "Search merchants by the ContactPhone",
+          "example": "+33711223344"
+        },
+        "filterCreationUtcDateFrom": {
+          "type": "string",
+          "format": "date-time",
+          "description": "filter merchants by From beginning creation date"
+        },
+        "filterCreationUtcDateTo": {
+          "type": "string",
+          "format": "date-time",
+          "description": "filter merchants by to ending creation date"
+        },
+        "filterCountry": {
+          "type": "string",
+          "description": "filter merchants by country code",
+          "example": "FRA"
+        },
+        "filterSubscriptionStatusId": {
+          "type": "integer",
+          "description": "filter merchants by SubscriptionStatus"
+        },
+        "filterofferPublicationStatusId": {
+          "type": "integer",
+          "description": "filter merchants by offer publication status"
         }
       }
     },
@@ -515,13 +636,36 @@
       ],
       "properties": {
         "links": {
-          "$ref": "#/definitions/merchantListLinks"
+          "$ref": "#/definitions/incomingMerchantListLinks"
         },
         "merchants": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/merchantIndex"
+            "$ref": "#/definitions/incomingMerchantIndex"
           }
+        },
+        "paginationResult": {
+          "$ref": "#/definitions/paginationResult"
+        }
+      }
+    },
+    "outgoingMerchantList": {
+      "type": "object",
+      "required": [
+        "links"
+      ],
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/outgoingMerchantListLinks"
+        },
+        "merchants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/outgoingMerchantIndex"
+          }
+        },
+        "paginationResult": {
+          "$ref": "#/definitions/paginationResult"
         }
       }
     },
@@ -539,6 +683,20 @@
         }
       ]
     },
+    "links.GetIncomingMerchantIndexLink": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/link3"
+        }
+      ]
+    },
+    "links.GetOutgoingMerchantIndexLink": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/link3"
+        }
+      ]
+    },
     "links.AcceptMerchantSubscriptionLink": {
       "allOf": [
         {
@@ -546,7 +704,7 @@
         }
       ]
     },
-    "links.RefuseMerchantSubscriptionLink": {
+    "links.DeclineMerchantSubscriptionLink": {
       "allOf": [
         {
           "$ref": "#/definitions/link3"
@@ -560,14 +718,36 @@
         }
       ]
     },
-    "merchantInfoLinks": {
+    "links.GetMarketplaceMerchantApiIndexLink": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/link3"
+        }
+      ]
+    },
+    "links.GetIncomingMerchantListLink": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/link3"
+        }
+      ]
+    },
+    "links.GetOutgoingMerchantListLink": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/link3"
+        }
+      ]
+    },
+    "incomingMerchantInfoLinks": {
       "type": "object",
       "required": [
+        "self",
         "apiCredential"
       ],
       "properties": {
         "self": {
-          "$ref": "#/definitions/links.GetMerchantIndexLink"
+          "$ref": "#/definitions/links.GetIncomingMerchantIndexLink"
         },
         "apiCredential": {
           "$ref": "#/definitions/links.GetMerchantApiCredentialLink"
@@ -575,15 +755,52 @@
         "acceptSubscription": {
           "$ref": "#/definitions/links.AcceptMerchantSubscriptionLink"
         },
-        "refuseSubscription": {
-          "$ref": "#/definitions/links.RefuseMerchantSubscriptionLink"
+        "declineSubscription": {
+          "$ref": "#/definitions/links.DeclineMerchantSubscriptionLink"
         },
         "blockSubscription": {
           "$ref": "#/definitions/links.BlockMerchantSubscriptionLink"
         }
       }
     },
-    "merchantIndex": {
+    "incomingMerchantListLinks": {
+      "type": "object",
+      "required": [
+        "self"
+      ],
+      "properties": {
+        "self": {
+          "$ref": "#/definitions/links.GetIncomingMerchantListLink"
+        }
+      }
+    },
+    "outgoingMerchantListLinks": {
+      "type": "object",
+      "required": [
+        "self"
+      ],
+      "properties": {
+        "self": {
+          "$ref": "#/definitions/links.GetOutgoingMerchantListLink"
+        }
+      }
+    },
+    "outgoingMerchantInfoLinks": {
+      "type": "object",
+      "required": [
+        "self",
+        "apiCredential"
+      ],
+      "properties": {
+        "self": {
+          "$ref": "#/definitions/links.GetOutgoingMerchantIndexLink"
+        },
+        "apiCredential": {
+          "$ref": "#/definitions/links.GetMerchantApiCredentialLink"
+        }
+      }
+    },
+    "incomingMerchantIndex": {
       "type": "object",
       "required": [
         "info",
@@ -591,10 +808,25 @@
       ],
       "properties": {
         "info": {
-          "$ref": "#/definitions/merchantInfo"
+          "$ref": "#/definitions/incomingMerchantInfo"
         },
         "links": {
-          "$ref": "#/definitions/merchantInfoLinks"
+          "$ref": "#/definitions/incomingMerchantInfoLinks"
+        }
+      }
+    },
+    "outgoingMerchantIndex": {
+      "type": "object",
+      "required": [
+        "info",
+        "links"
+      ],
+      "properties": {
+        "info": {
+          "$ref": "#/definitions/outgoingMerchantInfo"
+        },
+        "links": {
+          "$ref": "#/definitions/outgoingMerchantInfoLinks"
         }
       }
     },
@@ -604,12 +836,11 @@
         "code",
         "email",
         "companyName",
+        "country",
         "firstName",
         "lastName",
         "phoneNumber",
-        "source",
-        "offerPublicationEnabled",
-        "orderImportationEnabled"
+        "creationUtcDate"
       ],
       "properties": {
         "code": {
@@ -621,6 +852,9 @@
         "companyName": {
           "$ref": "#/definitions/merchantCompanyName"
         },
+        "country": {
+          "$ref": "#/definitions/countryIsoCodeAlpha3"
+        },
         "firstName": {
           "type": "string"
         },
@@ -629,6 +863,33 @@
         },
         "phoneNumber": {
           "type": "string"
+        },
+        "creationUtcDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "importedOfferCount": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Imported offer count from the source marketpalce"
+        }
+      }
+    },
+    "merchantTargetMarketplaceInfo": {
+      "type": "object",
+      "required": [
+        "subscriptionRequestUtcDate",
+        "subscriptionStatus",
+        "credentialStatus",
+        "shippingSettingsStatus",
+        "offerPublicationStatusId",
+        "targetMarketplaceCode"
+      ],
+      "properties": {
+        "subscriptionRequestUtcDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "date the merchant pushed his registration to the marketplace (through SF)"
         },
         "subscriptionStatus": {
           "$ref": "#/definitions/marketplaceSubscriptionStatus"
@@ -639,19 +900,99 @@
         "shippingSettingsStatus": {
           "$ref": "#/definitions/marketplaceShippingSettingsStatus"
         },
-        "source": {
-          "type": "boolean",
-          "description": "If true, this marketplace is the source of offers",
-          "default": false,
-          "example": false
+        "offerPublicationStatusId": {
+          "type": "integer",
+          "format": "int32"
         },
-        "offerPublicationEnabled": {
-          "type": "boolean"
+        "publishedOfferCount": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Effective offer count published to the target marketplace"
         },
-        "orderImportationEnabled": {
-          "type": "boolean"
+        "publishableOfferCount": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Publishable offer count to the target marketplace"
+        },
+        "targetMarketplaceCode": {
+          "$ref": "#/definitions/marketplaceCode"
         }
       }
+    },
+    "incomingMerchantInfo": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/merchantInfo"
+        },
+        {
+          "$ref": "#/definitions/merchantTargetMarketplaceInfo"
+        },
+        {
+          "type": "object",
+          "required": [
+            "code",
+            "email",
+            "companyName",
+            "firstName",
+            "lastName",
+            "phoneNumber",
+            "sourceMarketplaceCode",
+            "creationUtcDate",
+            "subscriptionRequestUtcDate",
+            "subscriptionStatus",
+            "credentialStatus",
+            "shippingSettingsStatus",
+            "offerPublicationStatusId"
+          ],
+          "properties": {
+            "sourceMarketplaceCode": {
+              "$ref": "#/definitions/marketplaceMerchantCode"
+            },
+            "orderCount": {
+              "type": "integer",
+              "format": "int32",
+              "example": 102
+            },
+            "turnOver": {
+              "type": "number",
+              "format": "decimal",
+              "example": 10602.23
+            }
+          }
+        }
+      ]
+    },
+    "outgoingMerchantInfo": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/merchantInfo"
+        },
+        {
+          "type": "object",
+          "required": [
+            "code",
+            "email",
+            "companyName",
+            "firstName",
+            "lastName",
+            "phoneNumber",
+            "sourceMarketplaceCode",
+            "creationUtcDate"
+          ],
+          "properties": {
+            "sourceMarketplaceCode": {
+              "$ref": "#/definitions/marketplaceCode"
+            },
+            "targetMarketplaces": {
+              "type": "object",
+              "description": "The key is the marketplace code",
+              "additionalProperties": {
+                "$ref": "#/definitions/merchantTargetMarketplaceInfo"
+              }
+            }
+          }
+        }
+      ]
     },
     "merchantListOrderByOn": {
       "type": "string",
@@ -948,8 +1289,8 @@
       "description": "The Offer Importation status",
       "type": "string",
       "enum": [
-        "enabled",
-        "disabled"
+        "disabled",
+        "enabled"
       ],
       "example": "enabled"
     },
