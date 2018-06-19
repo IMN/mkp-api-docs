@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0",
     "title": "IMN marketplace API",
-    "description": "# The REST API of IMN system\n## Overview\nThe REST APIs provide programmatic access to read and write IMN data. \nBasically, with this API you will be able to do everything like you were with your browser on https://go.imn.io !\n\nThe main features are:\n- Register and manage your account\n- Create and manage and share your stores with your friends/co-workers.\n- Import your product catalog and schedule the auto importation\n- Search the channels your want to use\n- Configure your channels for your catalogs to export your product information:\n    - cost and general settings\n    - category and columns mappings\n    - your will be able to create and manage your custom column\n    - put in place exlusion filters based on simple conditions on your product data\n    - override product values\n    - get product vision for a channel catalog scope\n- Analyze and optimize your performance of your catalogs on all yours channels with different type of reportings by day, channel, category and by product.\n- Automatize your optimisation by using rules!\n- And of course... Manage your orders harvested from all your marketplaces:\n    - Synchronize your orders in an uniformized way\n    - Get the available actions and update the order status\n- ...and more!\n\n## Authentication credentials\nTBD\n\n## Things to keep in mind\n### API Rate Limits\n- The IMN REST API is limited to 100 calls/minute.\n\n### Media type\nThe default media type for requests and responses is application/json. Where noted, some operations support other content types. If no additional content type is mentioned for a specific operation, then the media type is application/json.\n\n### Required content type\nThe required and default encoding for the request and responses is UTF8.\n\n### Required date time format\nAll our date time are formatted in ISO 8601 format: 2014-06-24T16:25:00Z.\n\n### Base URL\nThe Base URL of the IMN API Order Management REST API conforms to the following template.\n\nhttps://api.imn.io\n\nAll URLs returned by the IMN API are relative to this base URL, and all requests to the REST API must use this base URL template.\n\nYou can test our API on https://api-docs.imn.io/swagger-ui\\\nYou can contact us on [gitter, #IMN/API](https://gitter.im/IMN/API)\n",
+    "description": "\r\n# The REST API of IMN system - Marketplace\r\n## Overview\r\nThe REST APIs provide programmatic access to read and write IMN data. \r\n\r\nThis API allows the marketplace to push data to IMN.\r\n\r\n\r\nThe main features are:\r\n- Push merchant offers\r\n- Push merchant orders\r\n- ...\r\n\r\n\r\n## Things to keep in mind\r\n### API Rate Limits\r\n- The IMN REST API is limited to 100 calls/minute.\r\n\r\n### Media type\r\nThe default media type for requests and responses is application/json. Where noted, some operations support other content types. If no additional content type is mentioned for a specific operation, then the media type is application/json.\r\n\r\n### Required content type\r\nThe required and default encoding for the request and responses is UTF8.\r\n\r\n### Required date time format\r\nAll our date time are formatted in ISO 8601 format: 2014-06-24T16:25:00Z.\r\n\r\n### Base URL\r\nAll URLs returned by the IMN API are relative to this base URL, and all requests to the REST API must use this base URL template.\r\n\r\nYou can test our API on https://mkp-api-docs.imn.io/swagger-ui\\\\\r\nYou can contact us on [gitter, #IMN/API](https://gitter.im/IMN/API)\r\n\r\n",
     "x-logo": {
       "url": "https://imngo.blob.core.windows.net/imngo/images/imn-logo.png",
       "backgroundColor": "#FFFFFF"
@@ -75,6 +75,7 @@
           "Marketplace - Merchants API - Global"
         ],
         "summary": "Get marketplace index in the merchants API",
+        "description": "Indicates you all the actions you can do this api",
         "operationId": "GetMarketplaceMerchantApiIndex",
         "parameters": [
           {
@@ -429,6 +430,7 @@
           "Marketplace - Merchants API - Marketplace Merchant Code"
         ],
         "summary": "Configure marketplace merchant code",
+        "description": "By configuring the merchant identifier of the marketplace the marketplace will be able  to found the merchant easily using this identifier",
         "operationId": "ConfigureMarketplaceMerchantCode",
         "parameters": [
           {
@@ -694,13 +696,14 @@
           "description": "filter merchants by Source MarketplaceCode",
           "example": "C1"
         },
-        "filterSubscriptionStatusId": {
-          "type": "integer",
-          "description": "filter merchants by SubscriptionStatus"
+        "filterCredentialStatus": {
+          "$ref": "#/definitions/marketplaceCredentialStatus"
         },
-        "filterofferPublicationStatusId": {
-          "type": "integer",
-          "description": "filter merchants by offer publication status"
+        "filterSubscriptionStatus": {
+          "$ref": "#/definitions/marketplaceSubscriptionStatus"
+        },
+        "filterofferPublicationStatus": {
+          "$ref": "#/definitions/marketplaceOfferPublicationStatus"
         }
       }
     },
@@ -755,13 +758,11 @@
           "description": "filter merchants by country code",
           "example": "FRA"
         },
-        "filterSubscriptionStatusId": {
-          "type": "integer",
-          "description": "filter merchants by SubscriptionStatus"
+        "filterSubscriptionStatus": {
+          "$ref": "#/definitions/marketplaceSubscriptionStatus"
         },
-        "filterofferPublicationStatusId": {
-          "type": "integer",
-          "description": "filter merchants by offer publication status"
+        "filterofferPublicationStatus": {
+          "$ref": "#/definitions/marketplaceOfferPublicationStatus"
         }
       }
     },
@@ -1014,18 +1015,18 @@
     "merchantTargetMarketplaceInfo": {
       "type": "object",
       "required": [
-        "subscriptionRequestUtcDate",
         "subscriptionStatus",
         "credentialStatus",
         "shippingSettingsStatus",
-        "offerPublicationStatusId",
-        "targetMarketplaceCode"
+        "offerPublicationStatusd",
+        "targetMarketplaceCode",
+        "subscriptionRequestUtcDate"
       ],
       "properties": {
         "subscriptionRequestUtcDate": {
           "type": "string",
           "format": "date-time",
-          "description": "date the merchant pushed his registration to the marketplace (through SF)"
+          "description": "date the merchant pushed his registration to the marketplace (through SF), can be null when a merchant already has an"
         },
         "subscriptionStatus": {
           "$ref": "#/definitions/marketplaceSubscriptionStatus"
@@ -1036,9 +1037,8 @@
         "shippingSettingsStatus": {
           "$ref": "#/definitions/marketplaceShippingSettingsStatus"
         },
-        "offerPublicationStatusId": {
-          "type": "integer",
-          "format": "int32"
+        "offerPublicationStatus": {
+          "$ref": "#/definitions/marketplaceOfferPublicationStatus"
         },
         "publishedOfferCount": {
           "type": "integer",
@@ -1052,6 +1052,9 @@
         },
         "targetMarketplaceCode": {
           "$ref": "#/definitions/marketplaceCode"
+        },
+        "targetMarketplaceMerchantCode": {
+          "$ref": "#/definitions/marketplaceMerchantCode"
         }
       }
     },
@@ -1072,16 +1075,17 @@
             "firstName",
             "lastName",
             "phoneNumber",
+            "sourceMarketplaceCode",
             "creationUtcDate",
             "subscriptionRequestUtcDate",
             "subscriptionStatus",
             "credentialStatus",
             "shippingSettingsStatus",
-            "offerPublicationStatusId"
+            "offerPublicationStatus"
           ],
           "properties": {
             "sourceMarketplaceCode": {
-              "$ref": "#/definitions/marketplaceMerchantCode"
+              "$ref": "#/definitions/marketplaceCode"
             },
             "orderCount": {
               "type": "integer",
@@ -1092,10 +1096,45 @@
               "type": "number",
               "format": "decimal",
               "example": 10602.23
+            },
+            "currencyCode": {
+              "$ref": "#/definitions/currencyCode"
+            },
+            "subscriptionHistory": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/marketplaceSubcriptionReporting"
+              }
             }
           }
         }
       ]
+    },
+    "marketplaceSubcriptionReporting": {
+      "type": "object",
+      "required": [
+        "senderEmail",
+        "utcDate",
+        "status"
+      ],
+      "properties": {
+        "senderEmail": {
+          "$ref": "#/definitions/email"
+        },
+        "utcDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "$ref": "#/definitions/marketplaceSubscriptionStatus"
+        },
+        "message": {
+          "type": "string"
+        },
+        "salesforceSubscriptionId": {
+          "type": "string"
+        }
+      }
     },
     "outgoingMerchantInfo": {
       "allOf": [
@@ -1118,6 +1157,9 @@
             "sourceMarketplaceCode": {
               "$ref": "#/definitions/marketplaceCode"
             },
+            "sourceMarketplaceMerchantCode": {
+              "$ref": "#/definitions/marketplaceMerchantCode"
+            },
             "targetMarketplaces": {
               "type": "object",
               "description": "The key is the marketplace code",
@@ -1136,7 +1178,8 @@
       "enum": [
         "merchantCode",
         "creationUtcDate",
-        "modificationUtcDate"
+        "modificationUtcDate",
+        "subscriptionRequestUtcDate"
       ]
     },
     "userLovIndex": {
@@ -1213,30 +1256,101 @@
         }
       }
     },
-    "orderChangeEventBase": {
+    "orderReceived": {
       "x-exclude": true,
+      "x-format": "Event",
+      "description": "This event his a technical one. It is stored in the event hub before it's processed by the OrderActor.\nThe order actor will create business event like order created or updated.\nOrderReceived will be not be stored in the Event Store.\n",
+      "allOf": [
+        {
+          "$ref": "#/definitions/orderMarketplaceInfo"
+        }
+      ]
+    },
+    "orderCreated": {
+      "x-exclude": true,
+      "x-format": "Event",
+      "allOf": [
+        {
+          "$ref": "#/definitions/orderMarketplaceInfo"
+        }
+      ]
+    },
+    "orderUpdated": {
+      "x-exclude": true,
+      "x-format": "Event",
+      "allOf": [
+        {
+          "$ref": "#/definitions/orderMarketplaceInfo"
+        }
+      ]
+    },
+    "orderMerchantInfoConfigured": {
+      "x-format": "Event",
       "type": "object",
-      "discriminator": "eventType",
       "required": [
         "order",
-        "userId",
-        "userName",
-        "eventType"
+        "merchantInfo"
       ],
       "properties": {
         "order": {
           "$ref": "#/definitions/orderIdentifier"
         },
-        "userId": {
-          "$ref": "#/definitions/userId"
-        },
-        "userName": {
-          "$ref": "#/definitions/orderChangeUserName"
-        },
-        "eventType": {
-          "type": "string"
+        "merchantInfo": {
+          "$ref": "#/definitions/orderMerchantInfo"
         }
       }
+    },
+    "orderMerchantInfoCleared": {
+      "x-format": "Event",
+      "type": "object",
+      "required": [
+        "order"
+      ],
+      "properties": {
+        "order": {
+          "$ref": "#/definitions/orderIdentifier"
+        }
+      }
+    },
+    "orderChangeEventBase": {
+      "x-exclude": true,
+      "allOf": [
+        {
+          "type": "object",
+          "required": [
+            "order",
+            "userId",
+            "userName",
+            "ipAddress",
+            "testMode",
+            "sourceType"
+          ],
+          "properties": {
+            "order": {
+              "$ref": "#/definitions/orderIdentifier"
+            },
+            "userId": {
+              "$ref": "#/definitions/userId"
+            },
+            "userName": {
+              "$ref": "#/definitions/orderChangeUserName"
+            },
+            "ipAddress": {
+              "description": "The IP address who request this operation",
+              "type": "string",
+              "example": "127.0.0.1"
+            },
+            "testMode": {
+              "description": "This operation was a test",
+              "type": "boolean",
+              "example": false
+            },
+            "sourceType": {
+              "$ref": "#/definitions/operationSourceType"
+            }
+          }
+        }
+      ]
     },
     "orderAccepted": {
       "x-format": "Event",
@@ -1267,7 +1381,10 @@
             "userId",
             "userName",
             "carrierCode",
-            "trackingNumber"
+            "trackingNumber",
+            "ipAddress",
+            "testMode",
+            "sourceType"
           ],
           "properties": {
             "carrierCode": {
@@ -1294,7 +1411,10 @@
             "userName",
             "carrierName",
             "trackingNumber",
-            "trackingUrl"
+            "trackingUrl",
+            "ipAddress",
+            "testMode",
+            "sourceType"
           ],
           "properties": {
             "carrierName": {
@@ -1322,12 +1442,12 @@
             "order",
             "userId",
             "userName",
-            "refundReason"
+            "refundReason",
+            "ipAddress",
+            "testMode",
+            "sourceType"
           ],
           "properties": {
-            "order": {
-              "$ref": "#/definitions/orderIdentifier"
-            },
             "refundReason": {
               "$ref": "#/definitions/refundReason"
             }
@@ -1347,7 +1467,10 @@
             "order",
             "userId",
             "userName",
-            "cancellationReason"
+            "cancellationReason",
+            "ipAddress",
+            "testMode",
+            "sourceType"
           ],
           "properties": {
             "cancellationReason": {
@@ -1357,11 +1480,221 @@
         }
       ]
     },
+    "orderChangeCompleted": {
+      "x-format": "Event",
+      "type": "object",
+      "required": [
+        "order",
+        "status"
+      ],
+      "properties": {
+        "order": {
+          "$ref": "#/definitions/orderIdentifier"
+        },
+        "status": {
+          "$ref": "#/definitions/processingStatus"
+        },
+        "error": {
+          "$ref": "#/definitions/userErrorMessage"
+        }
+      }
+    },
+    "orderManagementDisabledException": {
+      "x-format": "Exception",
+      "x-transient": false,
+      "x-technical": false,
+      "description": "The merchant '{merchantCode}' has disabled the order management for marketplace '{marketplaceCode}'.\n",
+      "type": "object",
+      "required": [
+        "marketplaceCode",
+        "merchantCode"
+      ],
+      "properties": {
+        "marketplaceCode": {
+          "$ref": "#/definitions/marketplaceCode"
+        },
+        "merchantCode": {
+          "$ref": "#/definitions/merchantCode"
+        }
+      }
+    },
+    "orderExceptionsBase": {
+      "x-exclude": true,
+      "type": "object",
+      "required": [
+        "marketplaceCode",
+        "merchantCode",
+        "imnOrderId"
+      ],
+      "properties": {
+        "marketplaceCode": {
+          "$ref": "#/definitions/marketplaceCode"
+        },
+        "merchantCode": {
+          "$ref": "#/definitions/merchantCode"
+        },
+        "imnOrderId": {
+          "$ref": "#/definitions/imnOrderId"
+        }
+      }
+    },
+    "duplicateOrderOperationException": {
+      "x-format": "Exception",
+      "x-transient": false,
+      "x-technical": false,
+      "description": "Duplicate operation on the order '{imnOrderId}' has been {duplicateCount} times for the marketplace '{marketplaceCode}' and the merchant '{merchantCode}'.\n",
+      "allOf": [
+        {
+          "$ref": "#/definitions/orderExceptionsBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "duplicateCount"
+          ],
+          "properties": {
+            "duplicateCount": {
+              "type": "integer",
+              "minimum": 2
+            }
+          }
+        }
+      ]
+    },
+    "orderNotFoundException": {
+      "x-format": "Exception",
+      "x-transient": false,
+      "x-technical": false,
+      "description": "The order '{imnOrderId}' is not found for the marketplace '{marketplaceCode}' and the merchant '{merchantCode}'\n",
+      "allOf": [
+        {
+          "$ref": "#/definitions/orderExceptionsBase"
+        }
+      ]
+    },
+    "orderInvalidEtagException": {
+      "x-format": "Exception",
+      "x-transient": false,
+      "x-technical": false,
+      "description": "The order change cannot be applied because the '{etag}' does not match the expetected one '{expectedETag}'.\nPlease reload your order and send the latest etag to change the order.\nIf the problem persist please contact our support team.\nOrder: '{imnOrderId}'\nMarketplace: '{marketplaceCode}' \nMerchant: '{merchantCode}'\n",
+      "allOf": [
+        {
+          "$ref": "#/definitions/orderExceptionsBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "marketplaceCode",
+            "merchantCode",
+            "imnOrderId",
+            "invalidETag",
+            "expectedETag"
+          ],
+          "properties": {
+            "invalidETag": {
+              "$ref": "#/definitions/orderEtag"
+            },
+            "expectedETag": {
+              "$ref": "#/definitions/orderEtag"
+            }
+          }
+        }
+      ]
+    },
+    "orderChangeInvalidException": {
+      "x-format": "Exception",
+      "x-transient": false,
+      "x-technical": false,
+      "description": "The order change type '{orderChangeType}' cannot be applied because the status of the order is '{imnOrderStatus}.\nIf the problem persist please contact our support team.\nOrder: '{imnOrderId}'\nMarketplace: '{marketplaceCode}' \nMerchant: '{merchantCode}'\n",
+      "allOf": [
+        {
+          "$ref": "#/definitions/orderExceptionsBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "marketplaceCode",
+            "merchantCode",
+            "imnOrderId",
+            "orderChangeType",
+            "imnOrderStatus"
+          ],
+          "properties": {
+            "orderChangeType": {
+              "$ref": "#/definitions/orderChangeType"
+            },
+            "imnOrderStatus": {
+              "$ref": "#/definitions/imnOrderStatus"
+            }
+          }
+        }
+      ]
+    },
+    "orderChangeNotFoundException": {
+      "x-format": "Exception",
+      "x-transient": false,
+      "x-technical": false,
+      "description": "The order change '{correlationId}' is not found.\nOrder: '{imnOrderId}'\nMarketplace: '{marketplaceCode}' \nMerchant: '{merchantCode}'\n",
+      "allOf": [
+        {
+          "$ref": "#/definitions/orderExceptionsBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "marketplaceCode",
+            "merchantCode",
+            "imnOrderId",
+            "correlationId"
+          ],
+          "properties": {
+            "correlationId": {
+              "$ref": "#/definitions/correlationId"
+            }
+          }
+        }
+      ]
+    },
+    "orderChangeAlreadyInProgressException": {
+      "x-format": "Exception",
+      "x-transient": false,
+      "x-technical": false,
+      "description": "There is an order change currently is progress for the '{imnOrderId}' for the marketplace '{marketplaceCode}' and the merchant '{merchantCode}'. |\nCurrent CorrelationId: '{currentCorrelationId}'\n",
+      "allOf": [
+        {
+          "$ref": "#/definitions/orderExceptionsBase"
+        },
+        {
+          "type": "object",
+          "required": [
+            "marketplaceCode",
+            "merchantCode",
+            "imnOrderId",
+            "currentCorrelationId"
+          ],
+          "properties": {
+            "currentCorrelationId": {
+              "$ref": "#/definitions/correlationId"
+            }
+          }
+        }
+      ]
+    },
     "imnOrderStatus": {
       "type": "string",
       "description": "IMN order status. Unified for all marketplaces.",
-      "example": "Shipped",
-      "x-lov": "IMNOrderState"
+      "example": "shipped",
+      "x-lov": "imnOrderStatus",
+      "enum": [
+        "new",
+        "pending",
+        "inProgress",
+        "received",
+        "shipped",
+        "cancelled",
+        "closed",
+        "availableOnStore"
+      ]
     },
     "marketplaceOrderStatus": {
       "description": "The marketplace order state",
@@ -1973,23 +2306,52 @@
     },
     "orderIMNInfo": {
       "type": "object",
+      "description": "The current order change correlation identifier indicates you if there is a pending order change on the marketplace side.",
       "required": [
-        "imnOrderUrl",
-        "imnLastModificationUtcDate",
-        "processing"
+        "imnLastModificationUtcDate"
       ],
       "properties": {
-        "imnOrderUrl": {
-          "$ref": "#/definitions/httpUrl"
-        },
         "imnLastModificationUtcDate": {
           "description": "The last modification UTC date done by IMN of this order",
           "format": "date-time",
           "type": "string",
           "example": "2017-04-16T10:30:23Z"
         },
-        "processing": {
-          "$ref": "#/definitions/orderProcessing"
+        "currentOrderChangeCorrelationId": {
+          "$ref": "#/definitions/correlationId"
+        }
+      }
+    },
+    "orderChangeType": {
+      "type": "string",
+      "x-lov": "OrderChangeBusinessOperationType",
+      "example": "ship",
+      "enum": [
+        "accept",
+        "refuse",
+        "ship",
+        "shipWithTrackingUrl",
+        "refund",
+        "cancel",
+        "pickUp",
+        "restock"
+      ]
+    },
+    "merchantEventPushed": {
+      "x-exclude": true,
+      "type": "object",
+      "discriminator": "eventType",
+      "required": [
+        "merchantCode",
+        "eventType"
+      ],
+      "properties": {
+        "merchantCode": {
+          "$ref": "#/definitions/merchantCode"
+        },
+        "eventType": {
+          "x-exclude": true,
+          "type": "string"
         }
       }
     },
@@ -2056,28 +2418,29 @@
     },
     "merchantMarketplaceEventBase": {
       "x-exclude": true,
-      "type": "object",
-      "discriminator": "eventType",
-      "required": [
-        "merchantCode",
-        "marketplaceCode",
-        "eventType"
-      ],
-      "properties": {
-        "merchantCode": {
-          "$ref": "#/definitions/merchantCode"
+      "allOf": [
+        {
+          "$ref": "#/definitions/merchantEventPushed"
         },
-        "marketplaceCode": {
-          "$ref": "#/definitions/merchantCode"
-        },
-        "eventType": {
-          "type": "string"
+        {
+          "type": "object",
+          "required": [
+            "marketplaceCode"
+          ],
+          "properties": {
+            "marketplaceCode": {
+              "$ref": "#/definitions/marketplaceCode"
+            }
+          }
         }
-      }
+      ]
     },
     "merchantMarketplaceCredentialConfigured": {
       "x-format": "Event",
       "allOf": [
+        {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
         {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
@@ -2105,6 +2468,9 @@
       "description": "When the merchant marketplace subscription has been requested",
       "allOf": [
         {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
+        {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
         {
@@ -2131,6 +2497,9 @@
       "description": "When the marketplace accept the mechant subscription request",
       "allOf": [
         {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
+        {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
         {
@@ -2152,6 +2521,9 @@
       "x-format": "Event",
       "description": "When the marketplace refuses the merchant subscription",
       "allOf": [
+        {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
         {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
@@ -2179,6 +2551,9 @@
       "description": "When the marketplace blocks the merchant subscription",
       "allOf": [
         {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
+        {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
         {
@@ -2204,6 +2579,9 @@
       "x-format": "Event",
       "allOf": [
         {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
+        {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
         {
@@ -2224,6 +2602,9 @@
     "merchantOffersSourceMarketplaceUndeclared": {
       "x-format": "Event",
       "allOf": [
+        {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
         {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
@@ -2246,6 +2627,9 @@
       "x-format": "Event",
       "allOf": [
         {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
+        {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
         {
@@ -2266,6 +2650,9 @@
     "merchantMarketplaceOfferImportationDisabled": {
       "x-format": "Event",
       "allOf": [
+        {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
         {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
@@ -2288,6 +2675,9 @@
       "x-format": "Event",
       "allOf": [
         {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
+        {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
         {
@@ -2308,6 +2698,9 @@
     "merchantMarketplaceOfferPublicationDisabled": {
       "x-format": "Event",
       "allOf": [
+        {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
         {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
@@ -2330,6 +2723,9 @@
       "x-format": "Event",
       "allOf": [
         {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
+        {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
         {
@@ -2350,6 +2746,9 @@
     "merchantMarketplaceOrderImportationDisabled": {
       "x-format": "Event",
       "allOf": [
+        {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
         {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
@@ -2375,7 +2774,6 @@
       "required": [
         "merchantCode",
         "userId",
-        "sourceMarketplaceCode",
         "targetMarketplacesSubscriptionRequested",
         "subscriptionRequestUtcDate",
         "salesforceSubscriptionId"
@@ -2386,9 +2784,6 @@
         },
         "userId": {
           "$ref": "#/definitions/userId"
-        },
-        "sourceMarketplaceCode": {
-          "$ref": "#/definitions/marketplaceCode"
         },
         "targetMarketplacesSubscriptionRequested": {
           "type": "array",
@@ -2413,6 +2808,9 @@
     "merchantMarketplacePricingSettingConfigured": {
       "x-format": "Event",
       "allOf": [
+        {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
         {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
@@ -2441,6 +2839,9 @@
     "merchantMarketplaceShippingPreprationSettingConfigured": {
       "x-format": "Event",
       "allOf": [
+        {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
         {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
@@ -2471,6 +2872,9 @@
     "merchantMarketplaceShippingDeliverySettingConfigured": {
       "x-format": "Event",
       "allOf": [
+        {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
         {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
@@ -2511,6 +2915,9 @@
       "x-format": "Event",
       "allOf": [
         {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
+        {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
         {
@@ -2531,6 +2938,9 @@
     "merchantMarketplaceShippingDeliverySettingDeleted": {
       "x-format": "Event",
       "allOf": [
+        {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
         {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
@@ -2553,6 +2963,9 @@
       "x-format": "Event",
       "allOf": [
         {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
+        {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
         {
@@ -2574,6 +2987,9 @@
       "x-format": "Event",
       "allOf": [
         {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
+        {
           "$ref": "#/definitions/merchantMarketplaceEventBase"
         },
         {
@@ -2590,6 +3006,39 @@
             },
             "marketplaceMerchantCode": {
               "$ref": "#/definitions/marketplaceMerchantCode"
+            }
+          }
+        }
+      ]
+    },
+    "merchantCurrencyConversionConfigured": {
+      "x-format": "Event",
+      "allOf": [
+        {
+          "$ref": "#/definitions/merchantEventPushed"
+        },
+        {
+          "type": "object",
+          "required": [
+            "userId",
+            "from",
+            "to",
+            "rate"
+          ],
+          "properties": {
+            "userId": {
+              "$ref": "#/definitions/userId"
+            },
+            "from": {
+              "$ref": "#/definitions/currencyCode"
+            },
+            "to": {
+              "$ref": "#/definitions/currencyCode"
+            },
+            "rate": {
+              "type": "number",
+              "format": "decimal",
+              "description": "The rate conversion to be applied from the currency to another one"
             }
           }
         }
@@ -3026,6 +3475,21 @@
         }
       }
     },
+    "invalidMarketplaceCodeException": {
+      "x-format": "Exception",
+      "x-transient": false,
+      "x-technical": false,
+      "type": "object",
+      "required": [
+        "marketplaceCode"
+      ],
+      "description": "The merketplace code '{marketplaceCode}' is different from the state\n",
+      "properties": {
+        "marketplaceCode": {
+          "$ref": "#/definitions/marketplaceCode"
+        }
+      }
+    },
     "invalidMerchantCodeException": {
       "x-format": "Exception",
       "x-transient": false,
@@ -3049,7 +3513,7 @@
       "required": [
         "marketplaceApiCredential"
       ],
-      "description": "The marketplace credential '{marketplaceApiCredential}' is invalid\n",
+      "description": "Marketplace credentials are not recognized, please check them and try again\n",
       "properties": {
         "marketplaceApiCredential": {
           "$ref": "#/definitions/marketplaceApiCredential"
@@ -3098,6 +3562,76 @@
       "properties": {
         "marketplaceCode": {
           "$ref": "#/definitions/marketplaceCode"
+        }
+      }
+    },
+    "partnerHttpException": {
+      "x-exclude": true,
+      "x-format": "Exception",
+      "x-transient": false,
+      "x-technical": false,
+      "type": "object",
+      "required": [
+        "correlationId",
+        "marketplaceCode",
+        "merchantCode",
+        "logUri",
+        "httpStatus",
+        "operationName"
+      ],
+      "description": "The partner http request is in error\n",
+      "properties": {
+        "correlationId": {
+          "$ref": "#/definitions/correlationId"
+        },
+        "marketplaceCode": {
+          "$ref": "#/definitions/marketplaceCode"
+        },
+        "merchantCode": {
+          "$ref": "#/definitions/merchantCode"
+        },
+        "logUri": {
+          "type": "string",
+          "format": "uri"
+        },
+        "httpStatus": {
+          "type": "string",
+          "format": "httpStatusCode"
+        },
+        "operationName": {
+          "type": "string"
+        }
+      }
+    },
+    "partnerInvalidResponse": {
+      "x-exclude": true,
+      "x-format": "Exception",
+      "x-transient": false,
+      "x-technical": false,
+      "type": "object",
+      "required": [
+        "correlationId",
+        "marketplaceCode",
+        "merchantCode",
+        "exceptionMessage",
+        "operationName"
+      ],
+      "description": "The partner http response is invalid\n",
+      "properties": {
+        "correlationId": {
+          "$ref": "#/definitions/correlationId"
+        },
+        "marketplaceCode": {
+          "$ref": "#/definitions/marketplaceCode"
+        },
+        "merchantCode": {
+          "$ref": "#/definitions/merchantCode"
+        },
+        "exceptionMessage": {
+          "type": "string"
+        },
+        "operationName": {
+          "type": "string"
         }
       }
     },
@@ -3519,20 +4053,20 @@
       "type": "object",
       "description": "Contains all changes for one marketplace for one merchant",
       "properties": {
-        "created": {
+        "offers": {
           "type": "array",
-          "items": {
-            "$ref": "#/definitions/merchantMarketplaceOffer"
-          }
-        },
-        "updated": {
-          "type": "array",
+          "description": "Offers that need to be created or replaced",
+          "minItems": 1,
+          "maxItems": 1000,
           "items": {
             "$ref": "#/definitions/merchantMarketplaceOffer"
           }
         },
         "deleted": {
           "type": "array",
+          "minItems": 1,
+          "maxItems": 1000,
+          "description": "Deleted offers",
           "items": {
             "$ref": "#/definitions/merchantMarketplaceOfferIdentifier"
           }
@@ -3542,22 +4076,22 @@
     "batchMerchantOfferChanges": {
       "x-format": "Message",
       "type": "object",
-      "description": "Contains all changes",
+      "description": "Contains all changes for a merchant",
       "properties": {
-        "created": {
+        "offers": {
           "type": "array",
-          "items": {
-            "$ref": "#/definitions/merchantOffer"
-          }
-        },
-        "updated": {
-          "type": "array",
+          "minItems": 1,
+          "maxItems": 1000,
+          "description": "Offers that need to be created or replaced",
           "items": {
             "$ref": "#/definitions/merchantOffer"
           }
         },
         "deleted": {
           "type": "array",
+          "minItems": 1,
+          "maxItems": 1000,
+          "description": "Deleted offers",
           "items": {
             "$ref": "#/definitions/merchantOfferIdentifier"
           }
@@ -3680,9 +4214,6 @@
       "allOf": [
         {
           "type": "object",
-          "required": [
-            "merchantOffers"
-          ],
           "properties": {
             "merchantOffers": {
               "type": "array",
@@ -3904,6 +4435,7 @@
       }
     },
     "pageSize": {
+      "x-exclude": true,
       "description": "Indicate the item count per page",
       "type": "integer",
       "format": "int32",
@@ -3915,6 +4447,7 @@
       "example": 100
     },
     "pageNumber": {
+      "x-exclude": true,
       "description": "Indicates the page number",
       "format": "int32",
       "type": "integer",
@@ -4078,6 +4611,7 @@
       "example": "FRA"
     },
     "currencyCode": {
+      "x-exclude": true,
       "description": "The currency code <a href=\"https://en.wikipedia.org/wiki/ISO_4217\">(ISO 4217)</a>\n",
       "type": "string",
       "pattern": "^[A-Z]{3}$",
@@ -4320,10 +4854,7 @@
           "$ref": "#/definitions/httpMethod"
         },
         "parameters": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/linkParameter3"
-          }
+          "$ref": "#/definitions/linkParameter3Types"
         },
         "urlTemplated": {
           "type": "boolean",
@@ -4340,6 +4871,22 @@
         "info": {
           "$ref": "#/definitions/infoSummaries"
         }
+      }
+    },
+    "linkParameter3Types": {
+      "x-exclude": true,
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/linkParameter3"
+      }
+    },
+    "linkParameter2Types": {
+      "x-exclude": true,
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 0,
+      "items": {
+        "$ref": "#/definitions/linkParameter2"
       }
     },
     "link2": {
@@ -4365,12 +4912,7 @@
           "$ref": "#/definitions/httpMethod"
         },
         "parameters": {
-          "type": "array",
-          "uniqueItems": true,
-          "minItems": 0,
-          "items": {
-            "$ref": "#/definitions/linkParameter2"
-          }
+          "$ref": "#/definitions/linkParameter2Types"
         },
         "info": {
           "$ref": "#/definitions/infoSummaries"
@@ -4633,6 +5175,19 @@
       "description": "The documentation related to this operation.",
       "example": "https://api-docs.imn.io/#operation/EnableChannelCatalog"
     },
+    "errorCode": {
+      "x-exclude": true,
+      "type": "string",
+      "description": "the error code. The error code can be a pattern containing the argument's name",
+      "example": "CatalogImportationAlreadyInProgress(ExecutionId currentCatalogImportationId)"
+    },
+    "cultureName": {
+      "x-exclude": true,
+      "type": "string",
+      "description": "If the error is translated, the culture name will be indicated",
+      "example": "en",
+      "x-lov": "Go2CultureName"
+    },
     "userErrorMessage": {
       "x-exclude": true,
       "type": "object",
@@ -4645,9 +5200,7 @@
           "$ref": "#/definitions/docUrl"
         },
         "code": {
-          "type": "string",
-          "description": "the error code. The error code can be a pattern containing the argument's name",
-          "example": "CatalogImportationAlreadyInProgress(ExecutionId currentCatalogImportationId)"
+          "$ref": "#/definitions/errorCode"
         },
         "message": {
           "type": "string",
@@ -4655,10 +5208,7 @@
           "example": "There is already an importation in progress: b24d0dd8-a561-478a-9b26-34f573f03527\n"
         },
         "cultureName": {
-          "type": "string",
-          "description": "If the error is translated, the culture name will be indicated",
-          "example": "en",
-          "x-lov": "Go2CultureName"
+          "$ref": "#/definitions/cultureName"
         },
         "arguments": {
           "$ref": "#/definitions/userErrorMessageArguments"
@@ -4868,11 +5418,124 @@
         "ascending",
         "descending"
       ]
+    },
+    "operationSourceType": {
+      "description": "Indicates the origin of the operation:\n* api: the operation has been done using our api directly.\n* ui: the operation has been done using our user interface. \n",
+      "type": "string",
+      "enum": [
+        "api",
+        "ui"
+      ],
+      "example": "api"
+    },
+    "processingStatus": {
+      "x-exclude": true,
+      "description": "The processing status of an operation",
+      "type": "string",
+      "enum": [
+        "none",
+        "inProgress",
+        "done",
+        "failed",
+        "aborted"
+      ]
+    },
+    "healthCheck": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Health check name",
+          "example": "MyDatabaseCheck"
+        },
+        "message": {
+          "type": "string",
+          "description": "Gets the status message of the check.",
+          "example": "Database connection OK"
+        },
+        "status": {
+          "$ref": "#/definitions/healthCheckStatus"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "healthCheckStatus": {
+      "type": "string",
+      "description": "Possible status values of a health check result.\n* degraded:  The check is degraded, failing but not critical\n* healthy: The check is healthy\n* ignored: The check was ignored\n* unhealthy:  The check is unhealthy\n",
+      "enum": [
+        "degraded",
+        "healthy",
+        "ignored",
+        "unhealthy"
+      ]
+    },
+    "messageBase": {
+      "x-exclude": true,
+      "type": "object",
+      "required": [
+        "messageId",
+        "correlationId"
+      ],
+      "properties": {
+        "messageId": {
+          "allOf": [
+            {
+              "x-excludeProperty": true
+            },
+            {
+              "$ref": "#/definitions/messageId"
+            }
+          ]
+        },
+        "correlationId": {
+          "$ref": "#/definitions/correlationId"
+        },
+        "causeId": {
+          "$ref": "#/definitions/causeId"
+        }
+      }
+    },
+    "eventName": {
+      "x-exclude": true,
+      "description": "The event name",
+      "type": "string"
+    },
+    "eventBase": {
+      "x-exclude": true,
+      "allOf": [
+        {
+          "$ref": "#/definitions/messageBase"
+        },
+        {
+          "type": "object",
+          "discriminator": "eventType",
+          "required": [
+            "eventName"
+          ],
+          "properties": {
+            "eventName": {
+              "$ref": "#/definitions/eventName"
+            }
+          }
+        }
+      ]
     }
   },
   "externalDocs": {
     "description": "Find the documentation for IMN's API here",
     "url": "https://api-docs.imn.io/"
+  },
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Ocp-Apim-Subscription-Key"
+    }
   },
   "x-tagGroups": [
     {
@@ -4892,136 +5555,54 @@
       ]
     }
   ],
-  "parameters": {
-    "imnOrderIdParameter": {
-      "description": "The IMN Order identifier",
-      "name": "imnOrderId",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "format": "imnOrderId",
-      "x-example": "A0CD3FG"
-    },
-    "userNameInQueryParameter": {
-      "name": "userName",
-      "description": "Sometimes the user in the e-commerce application is not the same as user associated with the current subscription key. We recommend providing your application's user login.",
-      "in": "query",
-      "required": true,
-      "type": "string"
-    },
-    "testModeInQueryParameter": {
-      "name": "testMode",
-      "description": "If true, the operation will be not be sent to marketplace. But the validation will be taken in account.",
-      "in": "query",
-      "required": false,
-      "type": "boolean",
-      "default": false,
-      "x-example": false
-    },
-    "storeIdOnlyGeneralParameters": {
-      "name": "storeId",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "format": "guid",
-      "description": "Your store identifier"
-    },
-    "pageNumberQueryStringParameter": {
-      "name": "pageNumber",
-      "description": "The page number you want to get",
-      "in": "query",
-      "required": true,
-      "type": "integer",
-      "format": "int32",
-      "minimum": 1,
-      "x-minimum": 1,
-      "x-example": 1
-    },
-    "pageSizeQueryStringParameter": {
-      "name": "pageSize",
-      "description": "The entry count you want to get",
-      "in": "query",
-      "required": true,
-      "type": "integer",
-      "format": "int32",
-      "minimum": 25,
-      "x-minimum": 25,
-      "maximum": 100,
-      "x-maximum": 100,
-      "x-example": 25
-    },
-    "ifNoneMatchParameter": {
-      "name": "If-None-Match",
-      "type": "string",
-      "in": "header",
-      "required": false,
-      "description": "ETag value to identify the last known version of requested resource.\\\nTo avoid useless exchange, we recommend you to indicate the ETag you previously got from this operation.\\\nIf the ETag value does not match the response will be 200 to give you a new content, otherwise the response will be: 304 Not Modified, without any content.\\\nFor more details go to this link: http://tools.ietf.org/html/rfc7232#section-2.3\n"
-    },
-    "ifMatchParameter": {
-      "name": "If-Match",
-      "in": "header",
-      "type": "string",
-      "required": true,
-      "description": "ETag value to identify the last known version of requested resource.\\\nTo ensure that you are making a change on the lastest version of the resource.\\\nFor more details go to this link: http://tools.ietf.org/html/rfc7232#section-2.3\n"
-    },
-    "acceptLanguageParameter": {
-      "name": "Accept-Language",
-      "description": "Indicates that the client accepts the following languages.",
-      "in": "header",
-      "required": false,
-      "type": "array",
-      "collectionFormat": "csv",
-      "items": {
-        "type": "string"
-      }
-    },
-    "acceptEncodingRequiredParameter": {
-      "name": "Accept-Encoding",
-      "description": "Allows the client to indicate wether it accepts a compressed encoding to reduce traffic size.",
-      "in": "header",
-      "required": true,
-      "type": "array",
-      "collectionFormat": "csv",
-      "items": {
-        "type": "string"
-      }
-    },
-    "acceptEncodingOptionalParameter": {
-      "name": "Accept-Encoding",
-      "description": "Allows the client to indicate wether it accepts a compressed encoding to reduce traffic size.",
-      "in": "header",
-      "required": false,
-      "type": "array",
-      "collectionFormat": "csv",
-      "items": {
-        "type": "string"
-      }
-    },
-    "walletPropertyCodeParameter": {
-      "name": "walletPropertyCode",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The wallet document code"
-    },
-    "marketplaceCodeParameter": {
-      "format": "MarketplaceCode",
-      "name": "marketplaceCode",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The marketplace code"
-    },
-    "merchantCodeParameter": {
-      "format": "MerchantCode",
-      "name": "merchantCode",
-      "in": "path",
-      "required": true,
-      "type": "string",
-      "description": "The merchant code"
-    }
-  },
   "responses": {
+    "orderBatchBadRequest": {
+      "description": "In case there is an error like:\n- ValidationException\n- DuplicateOrderOperationException\n- InvalidMerchantCodeException\n- OrderManagementDisabledException\n",
+      "x-exceptions": [
+        "ValidationException",
+        "DuplicateOrderOperationException",
+        "InvalidMerchantCodeException",
+        "OrderManagementDisabledException"
+      ],
+      "schema": {
+        "$ref": "#/definitions/errorResponseMessage"
+      }
+    },
+    "orderNotFound": {
+      "description": "The requested order is not found.\n",
+      "x-exceptions": [
+        "OrderNotFoundException",
+        "OrderManagementDisabledException"
+      ],
+      "schema": {
+        "$ref": "#/definitions/errorResponseMessage"
+      }
+    },
+    "orderChangeNotFound": {
+      "description": "The requested order or correlation identifier is not found.",
+      "x-exceptions": [
+        "OrderNotFoundException",
+        "OrderChangeNotFoundException"
+      ],
+      "schema": {
+        "$ref": "#/definitions/errorResponseMessage"
+      }
+    },
+    "orderChangeAlreadyInProgress": {
+      "x-exceptions": [
+        "OrderChangeAlreadyInProgressException"
+      ],
+      "description": "Already processing a change request for this Order.\\\nPlease refresh your clients Order information and retry later.\n",
+      "headers": {
+        "Retry-After": {
+          "type": "integer",
+          "description": "Indicates the duration in seconds to wait to be able to make this request again"
+        }
+      },
+      "schema": {
+        "$ref": "#/definitions/errorResponseMessage"
+      }
+    },
     "GeneralError": {
       "description": "Occurs when something goes wrong",
       "schema": {
@@ -5132,6 +5713,143 @@
       "schema": {
         "$ref": "#/definitions/userErrorMessage"
       }
+    }
+  },
+  "parameters": {
+    "imnOrderIdParameter": {
+      "description": "The IMN Order identifier",
+      "name": "imnOrderId",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "format": "imnOrderId",
+      "x-example": "A0CD3FG"
+    },
+    "userNameInQueryParameter": {
+      "name": "userName",
+      "description": "Sometimes the user in the e-commerce application is not the same as user associated with the current subscription key. We recommend providing your application's user login.",
+      "in": "query",
+      "required": true,
+      "type": "string"
+    },
+    "testModeInQueryParameter": {
+      "name": "testMode",
+      "description": "If true, the operation will be not be sent to marketplace. But the validation will be taken in account.",
+      "in": "query",
+      "required": false,
+      "type": "boolean",
+      "default": false,
+      "x-example": false
+    },
+    "correlationIdParameter": {
+      "name": "correlationId",
+      "in": "path",
+      "type": "string",
+      "format": "CorrelationId",
+      "required": true,
+      "description": "It's the guid corresponding to the operation.\n"
+    },
+    "storeIdOnlyGeneralParameters": {
+      "name": "storeId",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "format": "guid",
+      "description": "Your store identifier"
+    },
+    "pageNumberQueryStringParameter": {
+      "name": "pageNumber",
+      "description": "The page number you want to get",
+      "in": "query",
+      "required": true,
+      "type": "integer",
+      "format": "int32",
+      "minimum": 1,
+      "x-minimum": 1,
+      "x-example": 1
+    },
+    "pageSizeQueryStringParameter": {
+      "name": "pageSize",
+      "description": "The entry count you want to get",
+      "in": "query",
+      "required": true,
+      "type": "integer",
+      "format": "int32",
+      "minimum": 25,
+      "x-minimum": 25,
+      "maximum": 100,
+      "x-maximum": 100,
+      "x-example": 25
+    },
+    "ifNoneMatchParameter": {
+      "name": "If-None-Match",
+      "type": "string",
+      "in": "header",
+      "required": false,
+      "description": "ETag value to identify the last known version of requested resource.\\\nTo avoid useless exchange, we recommend you to indicate the ETag you previously got from this operation.\\\nIf the ETag value does not match the response will be 200 to give you a new content, otherwise the response will be: 304 Not Modified, without any content.\\\nFor more details go to this link: http://tools.ietf.org/html/rfc7232#section-2.3\n"
+    },
+    "ifMatchParameter": {
+      "name": "If-Match",
+      "in": "header",
+      "type": "string",
+      "required": true,
+      "description": "ETag value to identify the last known version of requested resource.\\\nTo ensure that you are making a change on the lastest version of the resource.\\\nFor more details go to this link: http://tools.ietf.org/html/rfc7232#section-2.3\n"
+    },
+    "acceptLanguageParameter": {
+      "name": "Accept-Language",
+      "description": "Indicates that the client accepts the following languages.",
+      "in": "header",
+      "required": false,
+      "type": "array",
+      "collectionFormat": "csv",
+      "items": {
+        "type": "string"
+      }
+    },
+    "acceptEncodingRequiredParameter": {
+      "name": "Accept-Encoding",
+      "description": "Allows the client to indicate wether it accepts a compressed encoding to reduce traffic size.",
+      "in": "header",
+      "required": true,
+      "type": "array",
+      "collectionFormat": "csv",
+      "items": {
+        "type": "string"
+      }
+    },
+    "acceptEncodingOptionalParameter": {
+      "name": "Accept-Encoding",
+      "description": "Allows the client to indicate wether it accepts a compressed encoding to reduce traffic size.",
+      "in": "header",
+      "required": false,
+      "type": "array",
+      "collectionFormat": "csv",
+      "items": {
+        "type": "string"
+      }
+    },
+    "walletPropertyCodeParameter": {
+      "name": "walletPropertyCode",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The wallet document code"
+    },
+    "marketplaceCodeParameter": {
+      "format": "MarketplaceCode",
+      "name": "marketplaceCode",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The marketplace code"
+    },
+    "merchantCodeParameter": {
+      "format": "MerchantCode",
+      "name": "merchantCode",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "The merchant code"
     }
   }
 }
