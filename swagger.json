@@ -1149,7 +1149,8 @@
             "lastName",
             "phoneNumber",
             "sourceMarketplaceCode",
-            "creationUtcDate"
+            "creationUtcDate",
+            "credentialStatus"
           ],
           "properties": {
             "sourceMarketplaceCode": {
@@ -1164,6 +1165,9 @@
               "additionalProperties": {
                 "$ref": "#/definitions/merchantTargetMarketplaceInfo"
               }
+            },
+            "credentialStatus": {
+              "$ref": "#/definitions/marketplaceCredentialStatus"
             }
           }
         }
@@ -1280,16 +1284,44 @@
         }
       }
     },
-    "beezUPOrderChangeExecutionSummary": {
+    "beezUPOrderChangeExecution": {
+      "x-exclude": true,
       "allOf": [
         {
           "$ref": "#/definitions/beezUPOrderIdentifier"
         },
         {
           "type": "object",
+          "description": "The BeezUP order change execution",
+          "required": [
+            "executionId"
+          ],
+          "properties": {
+            "executionId": {
+              "$ref": "#/definitions/beezUPExecutionId"
+            },
+            "processingStatus": {
+              "$ref": "#/definitions/processingStatus"
+            },
+            "errorCode": {
+              "type": "string"
+            },
+            "errorMessage": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "beezUPOrderChangeExecutionSummary": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/beezUPOrderChangeExecution"
+        },
+        {
+          "type": "object",
           "description": "The BeezUP order change execution summary",
           "required": [
-            "executionId",
             "correlationId",
             "merchantCode",
             "marketplaceCode",
@@ -1310,15 +1342,6 @@
             },
             "marketplaceOrderId": {
               "$ref": "#/definitions/marketplaceOrderId"
-            },
-            "processingStatus": {
-              "type": "string"
-            },
-            "errorCode": {
-              "type": "string"
-            },
-            "errorMessage": {
-              "type": "string"
             }
           }
         }
@@ -1374,7 +1397,8 @@
             "userName",
             "ipAddress",
             "testMode",
-            "sourceType"
+            "sourceType",
+            "eventType"
           ],
           "properties": {
             "order": {
@@ -1399,8 +1423,9 @@
             "sourceType": {
               "$ref": "#/definitions/operationSourceType"
             },
-            "eventName": {
-              "type": "string"
+            "eventType": {
+              "type": "string",
+              "description": "The event type occured on the order"
             }
           }
         }
@@ -1625,7 +1650,7 @@
       "x-format": "Command",
       "allOf": [
         {
-          "$ref": "#/definitions/orderChangeEventBase"
+          "$ref": "#/definitions/orderChangeCommandBase"
         },
         {
           "type": "object",
@@ -1650,7 +1675,7 @@
       "x-format": "Command",
       "allOf": [
         {
-          "$ref": "#/definitions/orderChangeEventBase"
+          "$ref": "#/definitions/orderChangeCommandBase"
         },
         {
           "type": "object",
@@ -1675,7 +1700,7 @@
       "x-format": "Command",
       "allOf": [
         {
-          "$ref": "#/definitions/orderChangeEventBase"
+          "$ref": "#/definitions/orderChangeCommandBase"
         },
         {
           "type": "object",
@@ -1708,7 +1733,7 @@
       "x-format": "Command",
       "allOf": [
         {
-          "$ref": "#/definitions/orderChangeEventBase"
+          "$ref": "#/definitions/orderChangeCommandBase"
         },
         {
           "type": "object",
@@ -1745,7 +1770,7 @@
       "x-format": "Command",
       "allOf": [
         {
-          "$ref": "#/definitions/orderChangeEventBase"
+          "$ref": "#/definitions/orderChangeCommandBase"
         },
         {
           "type": "object",
@@ -1774,7 +1799,7 @@
       "x-format": "Command",
       "allOf": [
         {
-          "$ref": "#/definitions/orderChangeEventBase"
+          "$ref": "#/definitions/orderChangeCommandBase"
         },
         {
           "type": "object",
@@ -2657,22 +2682,6 @@
         }
       ]
     },
-    "merchantOfferCreated": {
-      "x-format": "Event",
-      "allOf": [
-        {
-          "$ref": "#/definitions/merchantOfferEventBase"
-        }
-      ]
-    },
-    "merchantOfferUpdated": {
-      "x-format": "Event",
-      "allOf": [
-        {
-          "$ref": "#/definitions/merchantOfferEventBase"
-        }
-      ]
-    },
     "merchantOfferDeleted": {
       "x-format": "Event",
       "allOf": [
@@ -2690,22 +2699,6 @@
       ]
     },
     "merchantMarketplaceOfferReceived": {
-      "x-format": "Event",
-      "allOf": [
-        {
-          "$ref": "#/definitions/merchantMarketplaceOfferEventBase"
-        }
-      ]
-    },
-    "merchantMarketplaceOfferCreated": {
-      "x-format": "Event",
-      "allOf": [
-        {
-          "$ref": "#/definitions/merchantMarketplaceOfferEventBase"
-        }
-      ]
-    },
-    "merchantMarketplaceOfferUpdated": {
       "x-format": "Event",
       "allOf": [
         {
@@ -2836,31 +2829,6 @@
         "duplicateCount": {
           "type": "integer",
           "minimum": 2
-        }
-      }
-    },
-    "batchMerchantMarketplaceOfferChanges": {
-      "x-format": "Message",
-      "type": "object",
-      "description": "Contains all changes for one marketplace for one merchant",
-      "properties": {
-        "offers": {
-          "type": "array",
-          "description": "Offers that need to be created or replaced",
-          "minItems": 1,
-          "maxItems": 1000,
-          "items": {
-            "$ref": "#/definitions/merchantMarketplaceOffer"
-          }
-        },
-        "deleted": {
-          "type": "array",
-          "minItems": 1,
-          "maxItems": 1000,
-          "description": "Deleted offers",
-          "items": {
-            "$ref": "#/definitions/merchantMarketplaceOfferIdentifier"
-          }
         }
       }
     },
@@ -3592,6 +3560,7 @@
       "required": [
         "merchantCode",
         "userId",
+        "sourceMarketplaceCode",
         "targetMarketplacesSubscriptionRequested",
         "subscriptionRequestUtcDate",
         "salesforceSubscriptionId"
@@ -3602,6 +3571,9 @@
         },
         "userId": {
           "$ref": "#/definitions/userId"
+        },
+        "sourceMarketplaceCode": {
+          "$ref": "#/definitions/marketplaceCode"
         },
         "targetMarketplacesSubscriptionRequested": {
           "type": "array",
@@ -4686,9 +4658,9 @@
     "marketplaceApiIntegrationStatus": {
       "type": "string",
       "enum": [
-        "up",
-        "down",
-        "paused"
+        "Up",
+        "Down",
+        "Paused"
       ]
     },
     "marketplaceStatus": {
@@ -5928,9 +5900,9 @@
         }
       }
     },
-    "eventName": {
+    "eventType": {
       "x-exclude": true,
-      "description": "The event name",
+      "description": "The event type",
       "type": "string"
     },
     "eventBase": {
@@ -5943,10 +5915,10 @@
           "type": "object",
           "discriminator": "eventType",
           "required": [
-            "eventName"
+            "eventType"
           ],
           "properties": {
-            "eventName": {
+            "eventType": {
               "$ref": "#/definitions/eventName"
             }
           }
