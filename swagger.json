@@ -1079,7 +1079,8 @@
             "subscriptionStatus",
             "credentialStatus",
             "shippingSettingsStatus",
-            "offerPublicationStatus"
+            "offerPublicationStatus",
+            "incomingUtcDate"
           ],
           "properties": {
             "sourceMarketplaceCode": {
@@ -1103,6 +1104,10 @@
               "items": {
                 "$ref": "#/definitions/marketplaceSubcriptionReporting"
               }
+            },
+            "incomingUtcDate": {
+              "type": "string",
+              "format": "date-time"
             }
           }
         }
@@ -1348,7 +1353,6 @@
       ]
     },
     "orderReceived": {
-      "x-exclude": true,
       "x-format": "Event",
       "description": "This event his a technical one. It is stored in the event hub before it's processed by the OrderActor.\nThe order actor will create business event like order created or updated.\nOrderReceived will be not be stored in the Event Store.\n",
       "allOf": [
@@ -2646,20 +2650,20 @@
         "Restock"
       ]
     },
-    "beezUPMerchantMarketplaceOffer": {
+    "beezUPMerchantOffer": {
       "allOf": [
         {
-          "$ref": "#/definitions/merchantMarketplaceOffer"
+          "$ref": "#/definitions/merchantOffer"
         },
         {
           "$ref": "#/definitions/beezUPMarketplaceAccountIdentifier"
         }
       ]
     },
-    "beezUPMerchantMarketplaceOfferIdentifier": {
+    "beezUPMerchantOfferIdentifier": {
       "allOf": [
         {
-          "$ref": "#/definitions/merchantMarketplaceOfferIdentifier"
+          "$ref": "#/definitions/merchantOfferIdentifier"
         },
         {
           "$ref": "#/definitions/beezUPMarketplaceAccountIdentifier"
