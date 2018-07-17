@@ -1074,7 +1074,6 @@
             "firstName",
             "lastName",
             "phoneNumber",
-            "sourceMarketplaceCode",
             "creationUtcDate",
             "subscriptionStatus",
             "credentialStatus",
@@ -1265,9 +1264,7 @@
     },
     "beezUPOrderId": {
       "description": "The BeezUP Order identifier",
-      "type": "string",
-      "format": "uuid",
-      "example": "00000000000000000000000000000000000000000000000"
+      "type": "string"
     },
     "beezUPOrderIdentifier": {
       "description": "The BeezUP order identifier",
@@ -1299,7 +1296,8 @@
           "type": "object",
           "description": "The BeezUP order change execution",
           "required": [
-            "executionId"
+            "executionId",
+            "processingStatus"
           ],
           "properties": {
             "executionId": {
@@ -2694,30 +2692,6 @@
         }
       ]
     },
-    "merchantMarketplaceOfferEventBase": {
-      "x-exclude": true,
-      "allOf": [
-        {
-          "$ref": "#/definitions/merchantMarketplaceOffer"
-        }
-      ]
-    },
-    "merchantMarketplaceOfferReceived": {
-      "x-format": "Event",
-      "allOf": [
-        {
-          "$ref": "#/definitions/merchantMarketplaceOfferEventBase"
-        }
-      ]
-    },
-    "merchantMarketplaceOfferDeleted": {
-      "x-format": "Event",
-      "allOf": [
-        {
-          "$ref": "#/definitions/merchantMarketplaceOfferIdentifier"
-        }
-      ]
-    },
     "merchantOfferNotImported": {
       "x-format": "Event",
       "allOf": [
@@ -2951,28 +2925,6 @@
         }
       }
     },
-    "merchantMarketplaceOfferIdentifier": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/merchantOfferIdentifier"
-        },
-        {
-          "type": "object",
-          "required": [
-            "merchantCode",
-            "marketplaceCode",
-            "sku",
-            "gtin",
-            "itemCondition"
-          ],
-          "properties": {
-            "marketplaceCode": {
-              "$ref": "#/definitions/marketplaceCode"
-            }
-          }
-        }
-      ]
-    },
     "merchantOfferList": {
       "allOf": [
         {
@@ -3035,32 +2987,8 @@
               "type": "string",
               "format": "date-time",
               "example": "2018-02-24T14:24:35"
-            }
-          }
-        }
-      ]
-    },
-    "merchantMarketplaceOffer": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/merchantOffer"
-        },
-        {
-          "type": "object",
-          "required": [
-            "merchantCode",
-            "marketplaceCode",
-            "sku",
-            "gtin",
-            "itemCondition",
-            "price",
-            "priceCurrency",
-            "deliveryLeadTime",
-            "inventoryLevel",
-            "lastUpdateUtcDate"
-          ],
-          "properties": {
-            "marketplaceCode": {
+            },
+            "sourceMarketplaceCode": {
               "$ref": "#/definitions/marketplaceCode"
             }
           }
@@ -4677,9 +4605,7 @@
     },
     "beezUPExecutionId": {
       "description": "The execution identifier",
-      "format": "uuid",
-      "type": "string",
-      "example": "8D4176FA78D5A7Fffa91e9edc694ec5858be9a1b109507c"
+      "type": "string"
     },
     "beezUPChannelId": {
       "type": "string",
