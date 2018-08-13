@@ -19,6 +19,9 @@
   "host": "api.imn.io",
   "x-IMN-api-ops": {
     "codeGenType": "webapi",
+    "product": "IMN-CORE",
+    "group": "merchant",
+    "applicationShortName": "MKP.MER.WS",
     "repo": "IMN",
     "appRoot": "IMN.MKP.MER.WebService",
     "apiName": "MarketplaceMerchantsV1",
@@ -27,6 +30,13 @@
     "comment": "No change. Just server side generation.\n",
     "using": [
       "IMN.Schemas",
+      "IMN.Exceptions",
+      "IMN.MER.Schemas",
+      "IMN.MER.Exceptions"
+    ],
+    "references": [
+      "IMN.Schemas",
+      "IMN.Exceptions",
       "IMN.MER.Schemas",
       "IMN.MER.Exceptions"
     ]
@@ -1079,8 +1089,7 @@
             "credentialStatus",
             "shippingSettingsStatus",
             "offerPublicationStatus",
-            "incomingUtcDate",
-            "salesforceSubscriptionUrl"
+            "incomingUtcDate"
           ],
           "properties": {
             "sourceMarketplaceCode": {
@@ -1158,8 +1167,7 @@
             "phoneNumber",
             "sourceMarketplaceCode",
             "creationUtcDate",
-            "credentialStatus",
-            "salesforceSubscriptionUrl"
+            "credentialStatus"
           ],
           "properties": {
             "sourceMarketplaceCode": {
