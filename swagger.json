@@ -1018,7 +1018,7 @@
         "importedOfferCount": {
           "type": "integer",
           "format": "int32",
-          "description": "Imported offer count from the source marketpalce"
+          "description": "Imported offer count from the source marketplace"
         }
       }
     },
