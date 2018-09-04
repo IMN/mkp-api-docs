@@ -1188,6 +1188,19 @@
             },
             "salesforceSubscriptionUrl": {
               "type": "string"
+            },
+            "orderCount": {
+              "type": "integer",
+              "format": "int32",
+              "example": 102
+            },
+            "turnOver": {
+              "type": "number",
+              "format": "decimal",
+              "example": 10602.23
+            },
+            "currencyCode": {
+              "$ref": "#/definitions/currencyCode"
             }
           }
         }
@@ -4381,6 +4394,33 @@
         },
         "operationName": {
           "type": "string"
+        }
+      }
+    },
+    "dependencyProjectionException": {
+      "x-format": "Exception",
+      "x-transient": false,
+      "x-technical": true,
+      "type": "object",
+      "required": [
+        "merchantCode",
+        "projectionType",
+        "projectionMessageId",
+        "currentMessageId"
+      ],
+      "description": "Projection '{projectionType}' ('{projectionMessageId}') failed for merchantCode '{merchantCode}'. Current messageId is '{currentMessageId}'\n",
+      "properties": {
+        "merchantCode": {
+          "$ref": "#/definitions/merchantCode"
+        },
+        "projectionType": {
+          "type": "string"
+        },
+        "projectionMessageId": {
+          "$ref": "#/definitions/messageId"
+        },
+        "currentMessageId": {
+          "$ref": "#/definitions/messageId"
         }
       }
     },
