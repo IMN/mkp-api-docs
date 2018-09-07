@@ -684,7 +684,7 @@
         "searchContactPhone": {
           "type": "string",
           "description": "Search merchants by the ContactPhone",
-          "example": "+33711223344"
+          "example": 33711223344
         },
         "filterSubscriptionRequestUtcDateFrom": {
           "type": "string",
@@ -751,7 +751,7 @@
         "searchContactPhone": {
           "type": "string",
           "description": "Search merchants by the ContactPhone",
-          "example": "+33711223344"
+          "example": 33711223344
         },
         "filterCreationUtcDateFrom": {
           "type": "string",
@@ -1120,6 +1120,9 @@
             },
             "salesforceSubscriptionUrl": {
               "type": "string"
+            },
+            "ecommerceSoftwareName": {
+              "$ref": "#/definitions/ecommerceSoftwareName"
             }
           }
         }
@@ -1201,6 +1204,9 @@
             },
             "currencyCode": {
               "$ref": "#/definitions/currencyCode"
+            },
+            "ecommerceSoftwareName": {
+              "$ref": "#/definitions/ecommerceSoftwareName"
             }
           }
         }
