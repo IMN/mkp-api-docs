@@ -659,6 +659,9 @@
       "properties": {
         "eventType": {
           "type": "string"
+        },
+        "partitionKey": {
+          "type": "string"
         }
       }
     },
@@ -1592,7 +1595,7 @@
         },
         "quantity": {
           "description": "The quantity of the order item",
-          "example": "1",
+          "example": "1.0",
           "type": "number",
           "format": "decimal"
         },
